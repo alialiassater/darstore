@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   Menu,
   UserPlus,
-  Award
+  Award,
+  User as UserIcon
 } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -75,6 +76,12 @@ export function Navbar() {
                 <span className="font-bold">{(user as any).points || 0}</span>
                 <span className="hidden lg:inline text-xs">{t("نقطة", "pts")}</span>
               </div>
+              <Link href="/account">
+                <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10" data-testid="link-account">
+                  <UserIcon className="w-4 h-4" />
+                  {t("حسابي", "My Account")}
+                </Button>
+              </Link>
               {(user.role === "admin" || user.role === "employee") && (
                 <Link href="/admin">
                   <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10" data-testid="link-admin">
@@ -154,6 +161,12 @@ export function Navbar() {
                         <span className="font-bold">{(user as any).points || 0}</span>
                         <span className="text-xs text-muted-foreground">{t("نقطة", "points")}</span>
                       </div>
+                      <Link href="/account" onClick={() => setIsOpen(false)}>
+                        <Button variant="secondary" className="w-full justify-start gap-2">
+                          <UserIcon className="w-4 h-4" />
+                          {t("حسابي", "My Account")}
+                        </Button>
+                      </Link>
                       {(user.role === "admin" || user.role === "employee") && (
                         <Link href="/admin" onClick={() => setIsOpen(false)}>
                           <Button variant="secondary" className="w-full justify-start gap-2">

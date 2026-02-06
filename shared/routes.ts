@@ -174,6 +174,24 @@ export const api = {
       responses: { 200: z.object({ updated: z.number() }), 401: errorSchemas.unauthorized },
     },
   },
+  profile: {
+    get: {
+      method: 'GET' as const,
+      path: '/api/profile',
+      responses: { 200: z.custom<typeof users.$inferSelect>(), 401: errorSchemas.unauthorized },
+    },
+    update: {
+      method: 'PUT' as const,
+      path: '/api/profile',
+      input: z.object({ name: z.string().optional(), phone: z.string().optional(), address: z.string().optional(), city: z.string().optional(), password: z.string().optional() }),
+      responses: { 200: z.custom<typeof users.$inferSelect>(), 401: errorSchemas.unauthorized },
+    },
+    orders: {
+      method: 'GET' as const,
+      path: '/api/profile/orders',
+      responses: { 200: z.array(z.any()), 401: errorSchemas.unauthorized },
+    },
+  },
   activity: {
     list: {
       method: 'GET' as const,

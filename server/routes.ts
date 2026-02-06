@@ -184,6 +184,43 @@ export async function registerRoutes(
     res.status(204).send();
   });
 
+  // === CUSTOMER PROFILE ===
+  app.get(api.profile.get.path, requireAuth, async (req, res) => {
+    const user = req.user as User;
+    const { password, ...safeUser } = user as any;
+    res.json(safeUser);
+  });
+
+  app.put(api.profile.update.path, requireAuth, async (req, res) => {
+    try {
+      const user = req.user as User;
+      const input = api.profile.update.input.parse(req.body);
+      const updates: Partial<User> = {};
+      if (input.name !== undefined) updates.name = input.name;
+      if (input.phone !== undefined) updates.phone = input.phone;
+      if (input.address !== undefined) updates.address = input.address;
+      if (input.city !== undefined) updates.city = input.city;
+      if (input.password && input.password.length >= 6) {
+        updates.password = await hashPassword(input.password);
+      }
+      const updated = await storage.updateUser(user.id, updates);
+      const { password: _, ...safeUser } = updated as any;
+      res.json(safeUser);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      console.error("Profile update error:", err);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  app.get(api.profile.orders.path, requireAuth, async (req, res) => {
+    const user = req.user as User;
+    const orders = await storage.getUserOrders(user.id);
+    res.json(orders);
+  });
+
   // === ORDERS ===
   app.post(api.orders.create.path, async (req, res) => {
     try {

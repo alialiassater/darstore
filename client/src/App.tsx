@@ -13,6 +13,7 @@ import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Checkout from "@/pages/Checkout";
 import Admin from "@/pages/Admin";
+import Account from "@/pages/Account";
 import NotFound from "@/pages/not-found";
 import { Navbar } from "@/components/layout/Navbar";
 import { CartDrawer } from "@/components/layout/CartDrawer";
@@ -32,6 +33,7 @@ function Router() {
           <Route path="/signup" component={Signup} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/admin" component={Admin} />
+          <Route path="/account" component={Account} />
           <Route component={NotFound} />
         </Switch>
       </main>
