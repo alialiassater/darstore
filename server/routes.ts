@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, hashPassword } from "./auth";
@@ -9,21 +9,23 @@ import passport from "passport";
 import type { User } from "@shared/schema";
 import { algerianWilayas } from "@shared/algeria-data";
 
-function requireAuth(req: any, res: any, next: any) {
+function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: "Login required" });
+    res.status(401).json({ message: "Login required" });
+    return;
   }
   next();
 }
 
-function requireAdmin(req: any, res: any, next: any) {
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated() || !["admin", "employee"].includes((req.user as User).role)) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
   next();
 }
 
-async function logAdminAction(req: any, action: string, entityType?: string, entityId?: number, details?: string) {
+async function logAdminAction(req: Request, action: string, entityType?: string, entityId?: number, details?: string) {
   const user = req.user as User;
   if (user) {
     await storage.logActivity({
