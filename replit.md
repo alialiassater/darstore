@@ -35,7 +35,10 @@ The project follows a monorepo pattern with three top-level directories:
 - `/store` — Book catalog with search and category filtering
 - `/books/:id` — Individual book detail page
 - `/login` — Authentication page
-- `/admin` — Admin dashboard for CRUD operations on books
+- `/signup` — Registration page
+- `/account` — Customer dashboard (profile editing, order history, loyalty points)
+- `/checkout` — Checkout page (requires login)
+- `/admin` — Admin dashboard for CRUD operations on books (admin/employee roles)
 
 **Path Aliases**:
 - `@/` → `client/src/`
