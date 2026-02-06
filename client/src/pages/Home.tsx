@@ -24,7 +24,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight">
-            {t("اكتشف عالماً من المعرفة", "Discover a World of Knowledge")}
+            {t("دار علي بن زيد للطباعة والنشر ", "Dar Ali Benzid for Printing & Publishing")}
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed">
             {t(
@@ -63,7 +63,7 @@ export default function Home() {
                 <Star className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold mb-2">{t("جودة عالية", "High Quality")}</h3>
-              <p className="text-muted-foreground">{t("كتب أصلية وطبعات فاخرة", "Original books and premium editions")}</p>
+              <p className="text-muted-foreground">{t("كتب وطبعات فاخرة", " books and premium editions")}</p>
             </div>
             <div className="bg-card p-6 rounded-xl border shadow-sm flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center text-green-600 mb-4">

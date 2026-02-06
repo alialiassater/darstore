@@ -1,0 +1,95 @@
+==============================
+SHIPPING SYSTEM (ALGERIA)
+==============================
+
+Add a complete shipping price system based on Algerian wilayas and baladiyas.
+
+GENERAL REQUIREMENTS:
+- Shipping price must be calculated in checkout
+- Shipping depends on selected Wilaya
+- Display final total price (products + shipping)
+- Cash on Delivery compatible
+
+==============================
+ALGERIAN LOCATIONS
+==============================
+
+- Add ALL 69 Algerian Wilayas 
+- Each Wilaya must contain its official Baladiyas (Communes)
+- Use official Algerian administrative data
+
+Checkout form must include:
+- Full name
+- Phone number
+- Wilaya (dropdown)
+- Baladiya (dropdown – filtered by Wilaya)
+- Full address
+
+==============================
+SHIPPING PRICES
+==============================
+
+- Each Wilaya has its own shipping price (DZD)
+- Admin can:
+  - Set shipping price per Wilaya
+  - Edit shipping price anytime
+  - Enable / disable shipping to specific Wilayas
+
+Example:
+- Algiers: 400 DZD
+- Oran: 500 DZD
+- Constantine: 600 DZD
+- Remote Wilayas: custom higher price
+
+==============================
+ADMIN DASHBOARD – SHIPPING
+==============================
+
+Add a new section in admin dashboard called:
+"Shipping Management"
+
+Admin features:
+- View all Wilayas
+- Set / update shipping price for each Wilaya
+- Enable / disable Wilaya shipping
+- Default shipping price option
+- Save changes to database
+
+==============================
+CHECKOUT BEHAVIOR
+==============================
+
+- When customer selects Wilaya:
+  - Shipping price updates automatically
+  - Baladiyas list updates dynamically
+- Show:
+  - Products total
+  - Shipping price
+  - Final total price
+
+==============================
+DATABASE MODELS
+==============================
+
+Shipping Schema:
+- wilayaCode
+- wilayaName_ar
+- wilayaName_en
+- shippingPrice
+- isActive
+
+Order Schema (update):
+- customer info
+- wilaya
+- baladiya
+- shippingPrice
+- totalPrice
+
+==============================
+EXTRA
+==============================
+
+- Arabic RTL support
+- Clear UI messages in Arabic
+- Validation for required fields
+- Ready for future delivery services integration
