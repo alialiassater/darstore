@@ -10,7 +10,8 @@ import {
   LogOut,
   LayoutDashboard,
   Menu,
-  UserPlus
+  UserPlus,
+  Award
 } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -69,7 +70,12 @@ export function Navbar() {
 
           {user ? (
             <>
-              {user.role === "admin" && (
+              <div className="flex items-center gap-1 text-primary-foreground/90 text-sm" data-testid="text-user-points">
+                <Award className="w-4 h-4 text-yellow-400" />
+                <span className="font-bold">{(user as any).points || 0}</span>
+                <span className="hidden lg:inline text-xs">{t("نقطة", "pts")}</span>
+              </div>
+              {(user.role === "admin" || user.role === "employee") && (
                 <Link href="/admin">
                   <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10" data-testid="link-admin">
                     <LayoutDashboard className="w-4 h-4" />
@@ -143,7 +149,12 @@ export function Navbar() {
                   </Button>
                   {user ? (
                     <>
-                      {user.role === "admin" && (
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-muted" data-testid="text-mobile-points">
+                        <Award className="w-4 h-4 text-yellow-500" />
+                        <span className="font-bold">{(user as any).points || 0}</span>
+                        <span className="text-xs text-muted-foreground">{t("نقطة", "points")}</span>
+                      </div>
+                      {(user.role === "admin" || user.role === "employee") && (
                         <Link href="/admin" onClick={() => setIsOpen(false)}>
                           <Button variant="secondary" className="w-full justify-start gap-2">
                             <LayoutDashboard className="w-4 h-4" />

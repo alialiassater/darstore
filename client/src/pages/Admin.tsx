@@ -47,7 +47,7 @@ export default function Admin() {
 
   if (authLoading) return <div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
-  if (!user || user.role !== "admin") {
+  if (!user || !["admin", "employee"].includes(user.role)) {
     setLocation("/login");
     return null;
   }
@@ -632,7 +632,7 @@ function CustomersTab() {
   });
 
   const editForm = useForm({
-    defaultValues: { name: "", email: "", phone: "", address: "", city: "" },
+    defaultValues: { name: "", email: "", phone: "", address: "", city: "", password: "", role: "user" },
   });
 
   const createCustomer = useMutation({
@@ -751,24 +751,31 @@ function CustomersTab() {
               <TableHead>{t("الاسم", "Name")}</TableHead>
               <TableHead>{t("البريد", "Email")}</TableHead>
               <TableHead className="hidden md:table-cell">{t("الهاتف", "Phone")}</TableHead>
+              <TableHead>{t("الدور", "Role")}</TableHead>
+              <TableHead>{t("النقاط", "Points")}</TableHead>
               <TableHead>{t("الحالة", "Status")}</TableHead>
               <TableHead className="text-end">{t("إجراءات", "Actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-10"><Loader2 className="animate-spin w-8 h-8 mx-auto" /></TableCell></TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center py-10"><Loader2 className="animate-spin w-8 h-8 mx-auto" /></TableCell></TableRow>
             ) : (customers as any[])?.map((c: any) => (
               <TableRow key={c.id} data-testid={`row-customer-${c.id}`}>
                 <TableCell>{c.id}</TableCell>
                 <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{c.name || "-"}</span>
-                    {c.role === "admin" && <Badge variant="default" className="no-default-hover-elevate no-default-active-elevate w-fit text-[10px] mt-0.5">{t("مشرف", "Admin")}</Badge>}
-                  </div>
+                  <span className="font-medium">{c.name || "-"}</span>
                 </TableCell>
                 <TableCell className="text-sm">{c.email}</TableCell>
                 <TableCell className="hidden md:table-cell text-sm">{c.phone || "-"}</TableCell>
+                <TableCell>
+                  <Badge variant={c.role === "admin" ? "default" : c.role === "employee" ? "secondary" : "outline"} className="no-default-hover-elevate no-default-active-elevate">
+                    {c.role === "admin" ? t("مدير", "Admin") : c.role === "employee" ? t("موظف", "Employee") : t("عميل", "Customer")}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <span className="font-bold text-accent">{c.points || 0}</span>
+                </TableCell>
                 <TableCell>
                   <Badge variant={c.enabled ? "secondary" : "destructive"} className="no-default-hover-elevate no-default-active-elevate">
                     {c.enabled ? t("نشط", "Active") : t("معطل", "Disabled")}
@@ -779,7 +786,7 @@ function CustomersTab() {
                     <Button variant="ghost" size="icon" onClick={() => viewOrders(c)} data-testid={`button-view-orders-${c.id}`}>
                       <History className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => { setEditCustomer(c); editForm.reset({ name: c.name || "", email: c.email, phone: c.phone || "", address: c.address || "", city: c.city || "" }); }} data-testid={`button-edit-customer-${c.id}`}>
+                    <Button variant="ghost" size="icon" onClick={() => { setEditCustomer(c); editForm.reset({ name: c.name || "", email: c.email, phone: c.phone || "", address: c.address || "", city: c.city || "", password: "", role: c.role || "user" }); }} data-testid={`button-edit-customer-${c.id}`}>
                       <Pencil className="w-4 h-4" />
                     </Button>
                     {c.role !== "admin" && (
@@ -818,7 +825,7 @@ function CustomersTab() {
               </TableRow>
             ))}
             {!isLoading && (!customers || (customers as any[]).length === 0) && (
-              <TableRow><TableCell colSpan={6} className="text-center py-10 text-muted-foreground">{t("لا يوجد عملاء", "No customers yet")}</TableCell></TableRow>
+              <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground">{t("لا يوجد عملاء", "No customers yet")}</TableCell></TableRow>
             )}
           </TableBody>
         </Table>
@@ -827,7 +834,11 @@ function CustomersTab() {
       <Dialog open={!!editCustomer} onOpenChange={(open) => { if (!open) setEditCustomer(null); }}>
         <DialogContent>
           <DialogHeader><DialogTitle>{t("تعديل العميل", "Edit Customer")}</DialogTitle></DialogHeader>
-          <form onSubmit={editForm.handleSubmit((data) => updateCustomer.mutate({ id: editCustomer.id, ...data }))} className="space-y-4 mt-4">
+          <form onSubmit={editForm.handleSubmit((data) => {
+            const payload: any = { id: editCustomer.id, name: data.name, email: data.email, phone: data.phone, address: data.address, city: data.city, role: data.role };
+            if (data.password && data.password.length >= 6) payload.password = data.password;
+            updateCustomer.mutate(payload);
+          })} className="space-y-4 mt-4">
             <div>
               <label className="text-sm font-medium">{t("الاسم", "Name")}</label>
               <Input {...editForm.register("name")} data-testid="input-edit-customer-name" />
@@ -835,6 +846,23 @@ function CustomersTab() {
             <div>
               <label className="text-sm font-medium">{t("البريد الإلكتروني", "Email")}</label>
               <Input type="email" {...editForm.register("email")} data-testid="input-edit-customer-email" />
+            </div>
+            <div>
+              <label className="text-sm font-medium">{t("كلمة المرور الجديدة", "New Password")} ({t("اتركه فارغاً للإبقاء على القديمة", "Leave empty to keep current")})</label>
+              <Input type="password" {...editForm.register("password")} placeholder={t("كلمة مرور جديدة (6 أحرف على الأقل)", "New password (min 6 chars)")} data-testid="input-edit-customer-password" />
+            </div>
+            <div>
+              <label className="text-sm font-medium">{t("الدور", "Role")}</label>
+              <Select value={editForm.watch("role")} onValueChange={(val) => editForm.setValue("role", val)}>
+                <SelectTrigger data-testid="select-edit-customer-role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">{t("عميل", "Customer")}</SelectItem>
+                  <SelectItem value="employee">{t("موظف", "Employee")}</SelectItem>
+                  <SelectItem value="admin">{t("مدير", "Admin")}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>

@@ -9,8 +9,15 @@ import passport from "passport";
 import type { User } from "@shared/schema";
 import { algerianWilayas } from "@shared/algeria-data";
 
+function requireAuth(req: any, res: any, next: any) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Login required" });
+  }
+  next();
+}
+
 function requireAdmin(req: any, res: any, next: any) {
-  if (!req.isAuthenticated() || (req.user as User).role !== "admin") {
+  if (!req.isAuthenticated() || !["admin", "employee"].includes((req.user as User).role)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   next();
@@ -235,7 +242,25 @@ export async function registerRoutes(
   app.put(api.orders.updateStatus.path, requireAdmin, async (req, res) => {
     try {
       const { status } = req.body;
-      const order = await storage.updateOrderStatus(Number(req.params.id), status);
+      const orderId = Number(req.params.id);
+      const existingOrder = await storage.getOrder(orderId);
+      if (!existingOrder) return res.status(404).json({ message: "Order not found" });
+
+      const order = await storage.updateOrderStatus(orderId, status);
+
+      if (status === "confirmed" && !existingOrder.pointsAwarded && existingOrder.userId) {
+        const orderTotal = Number(existingOrder.total) - Number(existingOrder.shippingPrice || 0);
+        const pointsToAward = Math.floor(orderTotal / 350);
+        if (pointsToAward > 0) {
+          const customer = await storage.getUser(existingOrder.userId);
+          if (customer) {
+            await storage.updateUser(customer.id, { points: customer.points + pointsToAward });
+            await storage.updateOrderPointsAwarded(orderId, true);
+            await logAdminAction(req, `Awarded ${pointsToAward} points`, "order", orderId);
+          }
+        }
+      }
+
       await logAdminAction(req, `Updated order status to ${status}`, "order", order.id);
       res.json(order);
     } catch (err) {
@@ -298,8 +323,15 @@ export async function registerRoutes(
   app.put(api.customers.update.path, requireAdmin, async (req, res) => {
     try {
       const id = Number(req.params.id);
-      const { password, ...safeUpdates } = req.body;
-      const user = await storage.updateUser(id, safeUpdates);
+      const { password, role, ...safeUpdates } = req.body;
+      const updates: any = { ...safeUpdates };
+      if (password && password.length >= 6) {
+        updates.password = await hashPassword(password);
+      }
+      if (role && ["user", "employee", "admin"].includes(role)) {
+        updates.role = role;
+      }
+      const user = await storage.updateUser(id, updates);
       await logAdminAction(req, "Updated customer", "user", id, user.email);
       res.json({ ...user, password: undefined });
     } catch (err) {
@@ -364,6 +396,54 @@ export async function registerRoutes(
     }
   });
 
+  // === POINTS REDEMPTION ===
+  app.post("/api/points/redeem", requireAuth, async (req, res) => {
+    try {
+      const user = req.user as User;
+      const { bookId, quantity } = req.body;
+      const book = await storage.getBook(bookId);
+      if (!book) return res.status(404).json({ message: "Book not found" });
+      
+      const pointsNeeded = Math.ceil(Number(book.price) / 350) * (quantity || 1);
+      if (user.points < pointsNeeded) {
+        return res.status(400).json({ message: "Not enough points", required: pointsNeeded, available: user.points });
+      }
+
+      await storage.updateUser(user.id, { points: user.points - pointsNeeded });
+      
+      const order = await storage.createOrder(
+        user.id,
+        user.name || user.email,
+        user.phone || "",
+        user.address || "",
+        user.city || "",
+        `Points redemption: ${pointsNeeded} points used`,
+        0,
+        [{ bookId: book.id, quantity: quantity || 1, unitPrice: 0 }],
+        undefined, undefined, undefined, 0
+      );
+
+      await storage.updateOrderPointsAwarded(order.id, true);
+
+      res.json({ message: "Points redeemed successfully", pointsUsed: pointsNeeded, remainingPoints: user.points - pointsNeeded, order });
+    } catch (err) {
+      res.status(400).json({ message: "Redemption failed" });
+    }
+  });
+
+  // === ADMIN POINTS MANAGEMENT ===
+  app.put("/api/admin/customers/:id/points", requireAdmin, async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const { points } = req.body;
+      const user = await storage.updateUser(id, { points: Number(points) });
+      await logAdminAction(req, `Set points to ${points}`, "user", id, user.email);
+      res.json({ ...user, password: undefined });
+    } catch (err) {
+      res.status(400).json({ message: "Update failed" });
+    }
+  });
+
   app.get(api.activity.list.path, requireAdmin, async (_req, res) => {
     const logs = await storage.getActivityLogs(200);
     res.json(logs);
@@ -408,7 +488,7 @@ async function seedDatabase(hashPassword: (pwd: string) => Promise<string>) {
   const existing = await storage.getUserByUsername("admin@daralibenzid.com");
   if (!existing) {
     console.log("Seeding database...");
-    const adminPwd = await hashPassword("admin123");
+    const adminPwd = await hashPassword("assater123");
     await storage.createUser({
       email: "admin@daralibenzid.com",
       password: adminPwd,
