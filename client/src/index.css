@@ -15,26 +15,26 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 15%;
 
-    --primary: 154 30% 25%; /* Refined Softer Dark Green */
+    --primary: 160 25% 20%; /* Softer, deeper professional green */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 70% 45%; /* Blue for primary actions */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 210 20% 98%; /* Very light grey/blue for background sections */
+    --secondary-foreground: 220 30% 15%;
 
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 40%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 0 75% 55%; /* Refined Red for Prices/Badges only */
+    --accent: 12 70% 50%; /* Slightly more muted, elegant red for accents */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 10% 90%;
-    --input: 220 10% 90%;
-    --ring: 200 70% 45%; /* Blue for active states */
+    --border: 220 10% 92%;
+    --input: 220 10% 92%;
+    --ring: 160 25% 20%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* Slightly rounder for a softer feel */
   }
 
   * {

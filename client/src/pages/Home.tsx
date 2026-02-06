@@ -18,12 +18,12 @@ export default function Home() {
       <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden bg-primary">
         {/* Background Image / Pattern with Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-primary/90 z-10" />
-          <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] z-0" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-primary/80 z-10" />
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] z-0" />
           
-          {/* Abstract blobs for some depth */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-1/2 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          {/* Abstract blobs for some depth - more subtle */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/2 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-20 text-center max-w-4xl py-20 md:py-32">
