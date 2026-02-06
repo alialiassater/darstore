@@ -90,7 +90,7 @@ export default function Home() {
               </p>
             </div>
             <Link href="/store">
-              <Button variant="link" className="text-accent font-bold">
+              <Button variant="outline" className="text-accent font-bold">
                 {t("عرض الكل", "View All")} &rarr;
               </Button>
             </Link>
@@ -106,7 +106,7 @@ export default function Home() {
                 </div>
               ))
             ) : (
-              featuredBooks?.map((book) => (
+              featuredBooks?.map((book: any) => (
                 <BookCard key={book.id} book={book} />
               ))
             )}

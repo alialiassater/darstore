@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, type InsertUser } from "@shared/routes"; // Ensure InsertUser is exported from routes or schema if needed, otherwise rely on schema directly
+import { api } from "@shared/routes";
+import { type User, type InsertUser } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 // Need to match the Zod schema inputs

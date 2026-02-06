@@ -88,7 +88,7 @@ export default function Admin() {
                   <Loader2 className="animate-spin w-8 h-8 mx-auto text-primary" />
                 </TableCell>
               </TableRow>
-            ) : books?.map((book) => (
+            ) : books?.map((book: any) => (
               <TableRow key={book.id}>
                 <TableCell>
                   <img src={book.image} alt="cover" className="w-10 h-14 object-cover rounded bg-muted" />

@@ -91,7 +91,7 @@ export default function Store() {
           </div>
         ) : books && books.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {books.map((book) => (
+            {books.map((book: any) => (
               <BookCard key={book.id} book={book} />
             ))}
           </div>
@@ -99,7 +99,7 @@ export default function Store() {
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             <BookX className="w-16 h-16 mb-4 opacity-20" />
             <p className="text-lg">{t("لا توجد نتائج مطابقة لبحثك", "No results found matching your search")}</p>
-            <Button variant="link" onClick={() => { setSearch(""); setCategory("all"); }}>
+            <Button variant="outline" onClick={() => { setSearch(""); setCategory("all"); }}>
               {t("مسح المرشحات", "Clear filters")}
             </Button>
           </div>
