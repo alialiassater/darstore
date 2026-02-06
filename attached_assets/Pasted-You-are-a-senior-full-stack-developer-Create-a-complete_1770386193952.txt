@@ -1,0 +1,156 @@
+You are a senior full-stack developer.
+
+Create a complete, production-ready full-stack web application for an online publishing house store.
+
+==============================
+PROJECT NAME
+==============================
+Arabic:
+"دار علي بن زيد للطباعة والنشر"
+
+English:
+"Dar Ali BenZid for Printing & Publishing"
+
+==============================
+LANGUAGES
+==============================
+- Arabic (Main language – RTL)
+- English (Secondary language – LTR)
+- Language switch button (AR / EN)
+- All content must support bilingual text
+
+==============================
+TECH STACK
+==============================
+Frontend:
+- React
+- Tailwind CSS
+- React Router
+- Context API or Redux (for auth & language)
+
+Backend:
+- Node.js
+- Express.js
+
+Database:
+- MongoDB (Mongoose)
+
+Authentication:
+- JWT (Access Token)
+- Password hashing using bcrypt
+- Roles: Admin / User
+
+==============================
+MAIN PAGES
+==============================
+
+1) HOME PAGE:
+- Clean, professional, publishing-house style UI
+- Logo + Publishing House Name
+- Slogan section (editable)
+- Featured books (latest published)
+- Book categories section
+- Call-to-action buttons:
+  - Browse Books
+  - Login
+- Fully responsive (desktop, tablet, mobile)
+- Arabic RTL layout by default
+
+2) STORE PAGE:
+- Books displayed in a responsive grid
+- Each book card includes:
+  - Cover image
+  - Title (Arabic + English)
+  - Author
+  - Price (DZD)
+-payment at delivery
+
+  - Short description
+  - View Details button
+
+3) BOOK DETAILS PAGE:
+- Large book cover
+- Full description (AR / EN)
+- Author
+- Price
+
+- ISBN (optional)
+- Category
+- Add to Cart button (future ready – no payment now)
+
+==============================
+ADMIN DASHBOARD (PROTECTED)
+==============================
+Admin-only access using JWT & role checking.
+
+Features:
+- Admin login page
+- Add new books
+- Edit existing books
+- Delete books
+- Upload book cover images
+- Set prices dynamically
+- Choose book language:
+  - Arabic
+  - English
+  - Both
+- Publish / Unpublish books
+- Simple and clean dashboard UI
+
+==============================
+AUTHENTICATION
+==============================
+- Login page (Arabic & English)
+- Secure JWT authentication
+- Password hashing
+- Navbar login / dashboard button
+- Role-based access control
+
+==============================
+NAVBAR
+==============================
+- Logo or Publishing House Name
+- Home
+- Store
+- Login / Dashboard
+- Language switch (AR / EN)
+- Responsive mobile menu
+
+==============================
+DATABASE MODELS
+==============================
+
+Book Schema:
+- title_ar: String
+- title_en: String
+- author: String
+- description_ar: String
+- description_en: String
+- price: Number
+- category: String
+- image: String
+- language: String (ar / en / both)
+- published: Boolean
+- createdAt: Date
+
+User Schema:
+- email: String
+- password: String (hashed)
+- role: String (admin / user)
+
+==============================
+EXTRA REQUIREMENTS
+==============================
+- Arabic RTL support everywhere
+- Clean and professional UI suitable for a real publishing house
+- Organized folder structure (client / server)
+- Reusable React components
+- Clear code comments
+- Easy content & price management
+- Ready for deployment
+- Provide clear instructions to run the project locally
+
+==============================
+FINAL GOAL
+==============================
+Build a scalable, real-world, professional online publishing house store that can be expanded later with payments and orders.
