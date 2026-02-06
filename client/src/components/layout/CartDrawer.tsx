@@ -1,13 +1,15 @@
 import { useCart } from "@/hooks/use-cart";
 import { useLanguage } from "@/hooks/use-language";
+import { useAuth } from "@/hooks/use-auth";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, LogIn, UserPlus } from "lucide-react";
 import { Link } from "wouter";
 
 export function CartDrawer() {
   const { items, removeFromCart, updateQuantity, total, isOpen, setIsOpen } = useCart();
   const { t, language } = useLanguage();
+  const { user } = useAuth();
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -85,11 +87,33 @@ export function CartDrawer() {
                 <span>{t("المجموع", "Total")}</span>
                 <span className="text-primary" data-testid="cart-total">{total.toLocaleString()} DZD</span>
               </div>
-              <Link href="/checkout" onClick={() => setIsOpen(false)}>
-                <Button className="w-full" size="lg" data-testid="button-checkout">
-                  {t("إتمام الطلب", "Proceed to Checkout")}
-                </Button>
-              </Link>
+              {user ? (
+                <Link href="/checkout" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full" size="lg" data-testid="button-checkout">
+                    {t("إتمام الطلب", "Proceed to Checkout")}
+                  </Button>
+                </Link>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-sm text-center text-muted-foreground">
+                    {t("لازم تسجل حساب باش تقدر تدير طلب", "Create an account to place an order")}
+                  </p>
+                  <div className="flex gap-2">
+                    <Link href="/signup" onClick={() => setIsOpen(false)} className="flex-1">
+                      <Button className="w-full gap-2" data-testid="button-cart-signup">
+                        <UserPlus className="w-4 h-4" />
+                        {t("إنشاء حساب", "Sign Up")}
+                      </Button>
+                    </Link>
+                    <Link href="/login" onClick={() => setIsOpen(false)} className="flex-1">
+                      <Button variant="outline" className="w-full gap-2" data-testid="button-cart-login">
+                        <LogIn className="w-4 h-4" />
+                        {t("دخول", "Login")}
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </>
         )}

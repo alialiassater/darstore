@@ -187,6 +187,10 @@ export async function registerRoutes(
   // === ORDERS ===
   app.post(api.orders.create.path, async (req, res) => {
     try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "يجب تسجيل الدخول لإتمام الطلب / You must be logged in to place an order" });
+      }
+
       const input = insertOrderSchema.parse(req.body);
       const bookPrices: { bookId: number; quantity: number; unitPrice: number }[] = [];
       let subtotal = 0;
@@ -208,7 +212,7 @@ export async function registerRoutes(
       }
 
       const total = subtotal + shippingPrice;
-      const userId = req.isAuthenticated() ? (req.user as User).id : null;
+      const userId = (req.user as User).id;
       const order = await storage.createOrder(userId, input.customerName, input.phone, input.address, input.city, input.notes, total, bookPrices, input.wilayaCode, input.wilayaName, input.baladiya, shippingPrice);
       res.status(201).json(order);
     } catch (err) {

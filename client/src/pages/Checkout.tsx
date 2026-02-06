@@ -148,6 +148,28 @@ export default function Checkout() {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="max-w-md w-full text-center p-8">
+          <ShoppingBag className="w-16 h-16 mx-auto mb-4 opacity-20" />
+          <h2 className="text-xl font-bold mb-2">{t("يجب إنشاء حساب أولاً", "Account Required")}</h2>
+          <p className="text-muted-foreground mb-6">
+            {t("لازم تسجل حساب باش تقدر تدير طلب", "You need to create an account to place an order")}
+          </p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Button onClick={() => setLocation("/signup")} data-testid="button-signup-checkout">
+              {t("إنشاء حساب", "Create Account")}
+            </Button>
+            <Button variant="outline" onClick={() => setLocation("/login")} data-testid="button-login-checkout">
+              {t("تسجيل الدخول", "Login")}
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
