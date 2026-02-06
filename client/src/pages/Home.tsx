@@ -15,15 +15,20 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen page-transition">
       {/* Hero Section */}
-      <section className="relative min-h-[500px] flex items-center justify-center overflow-hidden bg-primary">
+      <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden bg-primary">
         {/* Background Image / Pattern with Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-primary/80 z-10" />
-          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] z-0" />
+          <img 
+            src="/books-bg.jpg" 
+            alt="Library background" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-primary/90 z-10" />
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] z-20" />
           
           {/* Abstract blobs for some depth - more subtle */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-1/2 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse z-20"></div>
+          <div className="absolute top-1/2 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl z-20"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-20 text-center max-w-4xl py-20 md:py-32">
